@@ -20,5 +20,5 @@ Also debated storing segments instead of points but problem input is small enoug
 > If a wire visits a position on the grid multiple times, use the steps value from the first time
 > it visits that position when calculating the total value of a specific intersection.
 
-The code still netted the correct result. Bah.
+I completely missed that line of the problem statement. The code still netted the correct result. Bah.
 Fixed in [033df38](https://github.com/Warpten/aoc/commit/033df385cb17d9f84e8b41b9a94c67901700f07). Requires C++20.
