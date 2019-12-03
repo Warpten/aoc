@@ -41,14 +41,12 @@ namespace std
 }
 
 struct wire {
-    std::unordered_map<point, int64_t /* step count*/, std::hash<point>> points_map;
+    std::unordered_map<point, int64_t /* step count*/> points_map;
 
     template <size_t N>
     wire(const char(&path)[N]) {
         point last_point(0, 0);
         int64_t step_count = 0;
-
-        //points_map.emplace(std::piecewise_construct, std::forward_as_tuple(0, 0), std::forward_as_tuple(true));
 
         for (size_t i = 0; i < N;) {
             uint8_t dir = path[i];
@@ -56,30 +54,17 @@ struct wire {
 
             switch (dir)
             {
-            case 'R':
-                for (size_t ofs = 0; ofs < amount; ++ofs) {
-                    last_point.x += 1;
-                    points_map.try_emplace(last_point, ++step_count);
-                }
+#define MAKE_CASE(ID, COMPONENT, OP)                                    \
+            case ID:                                                    \
+                for (size_t ofs = 0; ofs < amount; ++ofs) {             \
+                    last_point.COMPONENT += OP;                         \
+                    points_map.try_emplace(last_point, ++step_count);   \
+                }                                                       \
                 break;
-            case 'L':
-                for (size_t ofs = 0; ofs < amount; ++ofs) {
-                    last_point.x -= 1;
-                    points_map.try_emplace(last_point, ++step_count);
-                }
-                break;
-            case 'U':
-                for (size_t ofs = 0; ofs < amount; ++ofs) {
-                    last_point.y += 1;
-                    points_map.try_emplace(last_point, ++step_count);
-                }
-                break;
-            case 'D':
-                for (size_t ofs = 0; ofs < amount; ++ofs) {
-                    last_point.y -= 1;
-                    points_map.try_emplace(last_point, ++step_count);
-                }
-                break;
+            MAKE_CASE('R', x, +1)
+            MAKE_CASE('L', x, -1)
+            MAKE_CASE('U', y, +1)
+            MAKE_CASE('D', y, -1)
             default:
                 throw std::runtime_error("unhandled cmd");
             }
@@ -105,7 +90,7 @@ struct wire {
     }
 
     int64_t step_count_of(point const& p) {
-        return points_map.find(p)->second - 1;
+        return points_map.find(p)->second;
     }
 };
 
@@ -129,7 +114,7 @@ int main() {
 #endif
     }
 
-    std::cout << manhattan << " " << elapsed << " ms";
+    std::cout << manhattan;
     return 0;
 }
 
