@@ -19,6 +19,7 @@ struct point {
 
     point(int32_t x, int32_t y) : x(x), y(y) { }
 
+
     int64_t manhattan() const {
         return std::abs(x) + std::abs(y);
     }
@@ -57,42 +58,26 @@ struct wire {
             {
             case 'R':
                 for (size_t ofs = 0; ofs < amount; ++ofs) {
-                    points_map.emplace(
-                        std::piecewise_construct,
-                        std::forward_as_tuple(last_point.x + 1, last_point.y),
-                        std::forward_as_tuple(step_count++));
-
                     last_point.x += 1;
+                    points_map.try_emplace(last_point, ++step_count);
                 }
                 break;
             case 'L':
                 for (size_t ofs = 0; ofs < amount; ++ofs) {
-                    points_map.emplace(
-                        std::piecewise_construct,
-                        std::forward_as_tuple(last_point.x - 1, last_point.y),
-                        std::forward_as_tuple(step_count++));
-                        
                     last_point.x -= 1;
+                    points_map.try_emplace(last_point, ++step_count);
                 }
                 break;
             case 'U':
                 for (size_t ofs = 0; ofs < amount; ++ofs) {
-                    points_map.emplace(
-                        std::piecewise_construct,
-                        std::forward_as_tuple(last_point.x, last_point.y + 1),
-                        std::forward_as_tuple(step_count++));
-                        
                     last_point.y += 1;
+                    points_map.try_emplace(last_point, ++step_count);
                 }
                 break;
             case 'D':
                 for (size_t ofs = 0; ofs < amount; ++ofs) {
-                    points_map.emplace(
-                        std::piecewise_construct,
-                        std::forward_as_tuple(last_point.x, last_point.y - 1),
-                        std::forward_as_tuple(step_count++));
-                        
                     last_point.y -= 1;
+                    points_map.try_emplace(last_point, ++step_count);
                 }
                 break;
             default:
@@ -120,7 +105,7 @@ struct wire {
     }
 
     int64_t step_count_of(point const& p) {
-        return points_map.find(p)->second + 1;
+        return points_map.find(p)->second - 1;
     }
 };
 
@@ -143,7 +128,8 @@ int main() {
         manhattan = std::min(manhattan, a.step_count_of(intersection) + b.step_count_of(intersection));
 #endif
     }
-    std::cout << manhattan;
+
+    std::cout << manhattan << " " << elapsed << " ms";
     return 0;
 }
 
