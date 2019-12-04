@@ -23,6 +23,20 @@ Also debated storing segments instead of points but problem input is small enoug
 I completely missed that line of the problem statement. The code still netted the correct result. Bah.
 Fixed in [033df38](https://github.com/Warpten/aoc/commit/033df385cb17d9f84e8b41b9a94c67901700f07). Requires C++20.
 
-### 03_constexpr (C++17)
+## 03_constexpr (C++17)
 
 Will only build on Clang 9.0.0, with `--std=c++17`. Requires **insane** `-ftemplate_depth`. Should be able to solve step 1. Step 2 is another problem entirely.
+
+## 04
+
+This solution is horrible and there is a simpler way to attack this problem.
+
+Consider an alphabet of 3 digits (`1, 2, 3`), and a combo lock of 3 digits: `[A][B][C]`
+
+If we pick `A = 1`, `B` now has three values availables: `1`, `2`, and `3`, which is effectively `4 - A` values.
+We them recurse: C has `(4 - B)` values, summed over all the possible values of B, which is `4 - A`, thus C overall takes `(4 - A) * (4 - B)`.
+
+
+If we pick `A = 2`, `B` now has two values availables: `2`, and `3`, which is effectively `4 - A` values again.
+We them recurse: C has  available.
+
