@@ -36,7 +36,6 @@ Consider an alphabet of 3 digits (`1, 2, 3`), and a combo lock of 3 digits: `[A]
 If we pick `A = 1`, `B` now has three values availables: `1`, `2`, and `3`, which is effectively `4 - A` values.
 We them recurse: C has `(4 - B)` values, summed over all the possible values of B, which is `4 - A`, thus C overall takes `(4 - A) * (4 - B)`.
 
+## 05
 
-If we pick `A = 2`, `B` now has two values availables: `2`, and `3`, which is effectively `4 - A` values again.
-We them recurse: C has  available.
-
+Could unfortunately not reuse `02` so I rewrote it. Jump handling is kind of crude but it does the job.
