@@ -38,4 +38,4 @@ We them recurse: C has `(4 - B)` values, summed over all the possible values of 
 
 ## 05
 
-Could unfortunately not reuse `02` so I rewrote it. Jump handling is kind of crude but it does the job.
+Could unfortunately not reuse `02` so I rewrote it. Jump handling is kind of crude but it does the job. It took me a stupid amount of time to understand inputs and outputs and I'm not sure I got them right.
