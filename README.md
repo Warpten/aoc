@@ -46,7 +46,7 @@ To do. Had a hard time understanding the problem statement and that just pissed 
 
 ## 07
 
-Only did step 1 and got too lazy. 
+Done using intcode impl from 09 with minor adjustments (processing stalled until input is received)
 
 ## 08
 
