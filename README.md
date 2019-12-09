@@ -39,3 +39,19 @@ We them recurse: C has `(4 - B)` values, summed over all the possible values of 
 ## 05
 
 Could unfortunately not reuse `02` so I rewrote it. Jump handling is kind of crude but it does the job. It took me a stupid amount of time to understand inputs and outputs and I'm not sure I got them right.
+
+## 06
+
+To do. Had a hard time understanding the problem statement and that just pissed me off.
+
+## 07
+
+Only did step 1 and got too lazy. 
+
+## 08
+
+Too lazy to even open AoC.
+
+## 09
+
+intcode is easy
