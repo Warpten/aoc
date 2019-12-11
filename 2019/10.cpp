@@ -188,39 +188,69 @@ struct map_t {
             if (vaporized_roids_rev.empty()) // we got em all, chief
                 break;
 
+            // no judging ok
+            auto get_angle = [&ox, &oy](coordinate const& lhs) {
+                double lhs_ang = 0;
+
+                double dx = ox - lhs.x;
+                double dy = oy - lhs.y;
+
+                if (dx > 0 && dy > 0) { // top-left corner
+                    lhs_ang = M_PI * 2 - std::atan(dx / dy); // 270 + ...
+                }
+                else if (dx > 0 && dy < 0) { // bottom-left corner
+                    lhs_ang = std::atan(dx / dy) - M_PI / 2; // ... - 90
+                }
+                else if (dx < 0 && dy > 0) { // top-right corner
+                    lhs_ang = std::atan(-1 * dx / dy);
+                }
+                else if (dx < 0 && dy < 0) { // bottom-right corner
+                    lhs_ang = std::atan(dx / dy) + M_PI / 2; // 90 + ...
+                }
+                else if (dx > 0 && dy == 0) { // left
+                    lhs_ang = 3 * M_PI / 2;
+                } 
+                else if (dx < 0 && dy == 0) { // right
+                    lhs_ang = M_PI / 2;
+                }
+                else if (dx == 0 && dy > 0) { // above
+                    lhs_ang = 0;
+                }
+                else if (dx == 0 && dy < 0) { // below
+                    lhs_ang = M_PI;
+                }
+
+                if (lhs_ang < 0) {
+                    lhs_ang += M_PI * 2;   
+                }
+
+                return lhs_ang;
+            };
+            
             // mah lazor is firin up and clockwise
             std::sort(vaporized_roids_rev.begin(), vaporized_roids_rev.end(),
-                [&ox, &oy](coordinate const& lhs, coordinate const& rhs) {
-                    // Not exactly working
-                    double lhs_ang = lhs.x != 0
-                        ? (M_PI / 2.0f - std::atan((double)lhs.y / (double)lhs.x))
-                        : (lhs.y > 0 ? 0 : M_PI);
-                    double rhs_ang = rhs.x != 0
-                        ? (M_PI / 2.0f - std::atan((double)rhs.y / (double)rhs.x))
-                        : (rhs.y > 0 ? 0 : M_PI);
-                    
-                    return lhs_ang > rhs_ang;
+                [&ox, &oy, &get_angle](coordinate const& lhs, coordinate const& rhs) {
+                    double lhs_ang = get_angle(lhs);
+                    double rhs_ang = get_angle(rhs);
+
+                    return lhs_ang < rhs_ang;
                 });
 
-            dump_hit_map(vaporized_roids_rev, ox, oy, true);
-
             // Delete roids
-            std::unordered_set<coordinate>::iterator begin = asteroids.begin();
-            std::unordered_set<coordinate>::iterator end = asteroids.end();
+            std::vector<coordinate>::iterator begin = vaporized_roids_rev.begin();
+            std::vector<coordinate>::iterator end = vaporized_roids_rev.end();
             while (begin != end)
             {
                 bool needs_vaporizing = false;
-                for (auto&& vroid : vaporized_roids_rev) {
+                for (auto&& vroid : asteroids) {
                     if (vroid == *begin) {
-                        needs_vaporizing = true;
+                        //std::cout << "Vaping " << begin->x << ";" << begin->y << std::endl;
+                        asteroids.erase(vroid);
                         break;
                     }
                 }
 
-                if (needs_vaporizing)
-                    begin = asteroids.erase(begin);
-                else
-                    ++begin;
+                ++begin;
             }
 
             vaporized_roids.insert(vaporized_roids.end(), vaporized_roids_rev.begin(), vaporized_roids_rev.end());
@@ -238,14 +268,18 @@ struct map_t {
                 if (x == ox && y == oy)
                     std::cout << 'o';
                 else if (hitset.count({ x, y }) > 0) {
-                    if (order)
-                    {
-                        auto index = std::find_if(hits.begin(), hits.end(), [&x, &y](coordinate const& c) { return c.x == x && c.y == y; });
-                        auto dist = std::distance(hits.begin(), index);
-                        if (dist > 9)
+                    if (order) {
+                        auto index = 0;
+                        for (auto&& c : hits)
+                        {
+                            if (c.x == x && c.y == y)
+                                break;
+                            ++index;
+                        }
+                        if (index > 9)
                             std::cout << '+';
                         else
-                            std::cout << char('0' + dist);
+                            std::cout << char('0' + index);
                     }
                     else
                         std::cout << '+';
@@ -265,7 +299,7 @@ struct map_t {
 };
 
 const char* map_i[] = {
-    /*".###..#......###..#...#",
+    ".###..#......###..#...#",
     "#.#..#.##..###..#...#.#",
     "#.#.#.##.#..##.#.###.##",
     ".#..#...####.#.##..##..",
@@ -287,35 +321,7 @@ const char* map_i[] = {
     "##.#.###.###.##.##..##.",
     "##.#..#..#..#.####.#.#.",
     ".#.#.#.##.##########..#",
-    "#####.##......#.#.####."*/
-
-    // Sample
-    /*".#..##.###...#######",
-    "##.############..##.",
-    ".#.######.########.#",
-    ".###.#######.####.#.",
-    "#####.##.#.##.###.##",
-    "..#####..#.#########",
-    "####################",
-    "#.####....###.#.#.##",
-    "##.#################",
-    "#####.##.###..####..",
-    "..######..##.#######",
-    "####.##.####...##..#",
-    ".#####..#.######.###",
-    "##...#.##########...",
-    "#.##########.#######",
-    ".####.#.###.###.#.##",
-    "....##.##.###..#####",
-    ".#.#.###########.###",
-    "#.#.#.#####.####.###",
-    "###.##.####.##.#..##"*/
-
-    ".#....#####...#..",
-    "##...##.#####..##",
-    "##...#...#.#####.",
-    "..#.....#...###..",
-    "..#.#.....#....##"
+    "#####.##......#.#.####."
 };
 
 int main() {
@@ -323,11 +329,8 @@ int main() {
 
     std::vector<coordinate> roids;
     int32_t x, y;
-    // std::cout << "Part 1: " << map.find_best_location(roids, x, y) << std::endl;
-    // map.dump_hit_map(roids, x, y);
-
-    x = 8;
-    y = 3;
+    std::cout << "Part 1: " << map.find_best_location(roids, x, y) << std::endl;
+    map.dump_hit_map(roids, x, y);
 
     auto vapes = map.ima_firin_mah_lazor(x, y);
     std::cout << "Part 2: " << vapes[199].x * 100 + vapes[199].y;
