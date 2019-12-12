@@ -237,11 +237,9 @@ namespace stdpp {
 
 int main() {
     jupiter_t jupiter;
-    jupiter.moons.push_back(moon_t{ 1,   3, -11 });
-    jupiter.moons.push_back(moon_t{ 17, -10,  -8 });
-    jupiter.moons.push_back(moon_t{ -1, -15,   2 });
-    jupiter.moons.push_back(moon_t{ 12,  -4,  -4 });
-
+    // copy paste this line 4 times, and fix the coordinates to xyz of each moon
+    // jupiter.moons.push_back(moon_t{ 1,   3, -11 });
+    
     // degree of liberty hasher
     struct dol_hasher {
         std::function<size_t(moon_t const&)> pos_hasher;
