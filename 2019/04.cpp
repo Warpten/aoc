@@ -108,14 +108,14 @@ int main() {
     // Lower bound is given as 347312 but as per problem
     // statement that is an invalid combo lock.
     // Since 7 > 3, has to be at least 347777.
-    keypad keypad(347312);
+    keypad keypad(/* copy lower boundary here */);
 
     // Upper bound is given as 805915 but as per problem
     // statement that is an invalid combo lock.
     // since 8 > 0, has to be 799999
 
     size_t valid_count = 0;
-    while (static_cast<int32_t>(keypad) <= 805915) // 805915
+    while (static_cast<int32_t>(keypad) <= /* copy higher boundary her*/)
     {
         if (keypad) {
             std::cout << static_cast<int>(keypad) << " ";
