@@ -54,4 +54,21 @@ Too lazy to even open AoC.
 
 ## 09
 
-intcode is easy
+Intcode is easy.
+
+## 10
+
+Angle calc is crude because i forgot atan2 was a thing and well defined as the phase angle of `x+iy`.
+Had to cheat a bit with rounding normalized rays so that bucketing hits per ray wouldn't fail due to off-by-epsilon errors.
+
+## 11
+
+Intcode is **really** easy.
+
+## 12
+
+Immediately thought of degrees of freedom but dismissed it as probably not needed, turns out it was. Wasted about an hour. As a scientist, multiplying potential and kinetic energy together pisses me off, but fun problem.
+
+## 13
+
+This one actually unveiled a bug in intcode i'm not sure how to fix, which effectively grants me infinite lives. Still managed to solve this one fairly easily, paddle AI was not hard.
